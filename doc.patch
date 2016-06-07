@@ -1,0 +1,28 @@
+--- top/driver.c.orig	2016-06-07 23:02:08.113419381 +0200
++++ top/driver.c	2016-06-07 23:03:49.003421639 +0200
+@@ -504,7 +504,7 @@
+ 
+ 	//func now points to a string with the desired help topic
+ 	//open the doc file and search matching topics
+-	doc = fopen("docfile.txt","r");
++	doc = fopen("/usr/share/doc/yafu/docfile.txt","r");
+ 	if (doc == NULL)
+ 	{
+ 		printf("fopen error: %s\n", strerror(errno));
+@@ -520,14 +520,14 @@
+ 		fgets(str,1024,doc);
+ 		//is this a header?
+ 		//printf("(%d) %s",strlen(str),str);
+-		if ((str[0] == '[') && (str[strlen(str) - 2] == ']'))
++		if ((str[0] == '[') && (str[strlen(str) - 3] == ']'))
+ 		{
+ 			//printf("in printtopic if\n");
+ 			if (printtopic == 1)
+ 				break;
+ 			printtopic = 0;
+ 			//does it match our topic?
+-			str[strlen(str) - 2] = '\0';
++			str[strlen(str) - 3] = '\0';
+ 			if (strstr(func,str+1) != NULL)
+ 				printtopic = 1;
+ 		}

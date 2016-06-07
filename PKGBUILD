@@ -10,10 +10,12 @@ url="http://${pkgname}.sourceforge.net/"
 license=('custom')
 source=("http://sourceforge.net/projects/${pkgname}/files/${_filenamever}/${pkgname}-${_filenamever}-src.zip"
         "http://downloads.sourceforge.net/project/msieve/msieve/Msieve%20v${_msievever}/msieve${_msievever/./}.tar.gz"
-        "make.patch")
+        "make.patch"
+        "doc.patch")
 sha1sums=('110553dece04ea010857c50207874c04a2b3e58d'
           '88a1ce2354b57835231bcaca0ecb0477b975b5cd'
-          '29617fad41d9ad369531a4c133842cc806a6e169')
+          '29617fad41d9ad369531a4c133842cc806a6e169'
+          '61de870428e466f294ad78d9894c8e554339d523')
 
 prepare() {
   cd "${srcdir}/msieve-${_msievever}"
@@ -22,6 +24,7 @@ prepare() {
       -i Makefile
   cd "${srcdir}/${pkgname}-${pkgver}"
   patch -p0 < "${srcdir}/make.patch"
+  patch -p0 < "${srcdir}/doc.patch"
 }
 
 build() {
@@ -40,4 +43,5 @@ package() {
   install -D -m755 yafu "${pkgdir}/usr/bin/yafu"
   head -n18 factor/factor_common.c|tail -n+2>LICENSE
   install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -D -m644 docfile.txt "${pkgdir}/usr/share/doc/${pkgname}/docfile.txt"
 }
