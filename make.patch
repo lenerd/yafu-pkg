@@ -1,0 +1,37 @@
+--- Makefile.orig	2016-06-07 23:12:52.366767131 +0200
++++ Makefile	2016-06-07 23:19:39.113442901 +0200
+@@ -19,8 +19,8 @@
+ 
+ CC = gcc
+ #CC = x86_64-w64-mingw32-gcc-4.5.1
+-#CFLAGS = -march=core2 -mtune=core2
+-CFLAGS = -g
++#CFLAGS += -march=core2 -mtune=core2
++CFLAGS += -g
+ WARN_FLAGS = -Wall # -Wconversion
+ OPT_FLAGS = -O3
+ INC = -I. -Iinclude
+@@ -63,8 +63,8 @@
+ ifeq ($(NFS),1)
+ 	CFLAGS += -DUSE_NFS
+ #	modify the following line for your particular msieve installation
+-	LIBS += -L../msieve/lib/linux/x86_64 
+-	LIBS += -lmsieve -ldl
++	LIBS += -L../msieve-${MSIEVEVER}/ 
++	LIBS += -lmsieve -lz -ldl
+ endif
+ 
+ # modify these for your particular cuda installation
+@@ -232,10 +232,10 @@
+ 	@echo "add 'PROFILE=1' to make with profiling enabled (slower) "
+ 
+ x86: $(MSIEVE_OBJS) $(YAFU_OBJS) $(YAFU_NFS_OBJS)
+-	$(CC) -m32 $(CFLAGS) $(MSIEVE_OBJS) $(YAFU_OBJS) $(YAFU_NFS_OBJS) -o yafu $(LIBS)
++	$(CC) -m32 $(CFLAGS) $(LDFLAGS) $(MSIEVE_OBJS) $(YAFU_OBJS) $(YAFU_NFS_OBJS) -o yafu $(LIBS)
+ 
+ x86_64: $(MSIEVE_OBJS) $(YAFU_OBJS) $(YAFU_NFS_OBJS)
+-	$(CC) $(CFLAGS) $(MSIEVE_OBJS) $(YAFU_OBJS) $(YAFU_NFS_OBJS) -o yafu $(LIBS)
++	$(CC) $(CFLAGS) $(LDFLAGS) $(MSIEVE_OBJS) $(YAFU_OBJS) $(YAFU_NFS_OBJS) -o yafu $(LIBS)
+ 
+ 
+ clean:

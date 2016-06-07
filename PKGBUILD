@@ -9,9 +9,11 @@ depends=('gmp' 'gmp-ecm')
 url="http://${pkgname}.sourceforge.net/"
 license=('custom')
 source=("http://sourceforge.net/projects/${pkgname}/files/${_filenamever}/${pkgname}-${_filenamever}-src.zip"
-        "http://downloads.sourceforge.net/project/msieve/msieve/Msieve%20v${_msievever}/msieve${_msievever/./}.tar.gz")
+        "http://downloads.sourceforge.net/project/msieve/msieve/Msieve%20v${_msievever}/msieve${_msievever/./}.tar.gz"
+        "make.patch")
 sha1sums=('110553dece04ea010857c50207874c04a2b3e58d'
-          '88a1ce2354b57835231bcaca0ecb0477b975b5cd')
+          '88a1ce2354b57835231bcaca0ecb0477b975b5cd'
+          '29617fad41d9ad369531a4c133842cc806a6e169')
 
 prepare() {
   cd "${srcdir}/msieve-${_msievever}"
@@ -19,10 +21,7 @@ prepare() {
       -e 's/-march=core2//g' \
       -i Makefile
   cd "${srcdir}/${pkgname}-${pkgver}"
-  sed -e 's/CFLAGS = /CFLAGS += /' \
-      -e 's/..\/msieve\/lib\/linux\/x86_64/..\/msieve-'"${_msievever}"'\//' \
-      -e 's/-lmsieve/-lmsieve -lz/' \
-      -i Makefile
+  patch -p0 < "${srcdir}/make.patch"
 }
 
 build() {
@@ -33,7 +32,7 @@ build() {
   make all ECM=1
   CFLAGS=$_CFLAGS
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make NFS=1 $CARCH
+  make NFS=1 MSIEVEVER="${_msievever}" $CARCH
 }
 
 package() {
